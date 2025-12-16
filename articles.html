@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Статьи — схема и поиск</title>
+
+  <link rel="stylesheet" href="css/style.css" />
+
+  <script defer src="js/app.js"></script>
+  <script defer src="js/global-search.js"></script>
+  <script defer src="js/parallax.js"></script>
+  <script defer src="js/progress.js"></script>
+  <script defer src="js/articles.js"></script>
+</head>
+
+<body>
+  <div class="progress" aria-hidden="true"><div class="progress__bar"></div></div>
+
+  <div class="page">
+    <div class="bg" style="background-image:url('assets/bg-earth.jpg')"></div>
+    <img class="hero-earth hero-earth--scheme earth-img" src="assets/earth-circle.png" alt="Земля">
+
+    <header class="header">
+      <div class="container">
+        <nav class="navbar" aria-label="Навигация">
+          <div class="nav-group nav-left">
+            <a class="pill" data-nav href="index.html">Главная</a>
+            <a class="pill" data-nav href="scheme.html">Схема</a>
+            <a class="pill active" data-nav href="articles.html">Статьи</a>
+          </div>
+
+          <div class="nav-center"></div>
+
+          <div class="nav-group nav-right">
+            <a class="pill" data-nav href="team.html">Команда</a>
+            <a class="pill" data-nav href="reviews.html">Отзыв</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="section">
+      <div class="container">
+
+        <!-- Заголовок -->
+        <section class="hero-box" style="margin-top:120px; background:transparent; box-shadow:none; padding:0">
+          <h1 class="hero-title" style="font-size:64px; margin-bottom:8px;">Статьи по систематике</h1>
+          <p class="hero-sub" style="max-width: 980px;">
+            Выбирай уровень на схеме или ищи статью по названию. Нажми на уровень — откроется статья.
+          </p>
+        </section>
+
+        <!-- Панель управления: поиск/фильтры (без категорий и без тегов) -->
+        <section class="card" style="margin-top:16px; background: transparent; border:0;">
+          <div class="kb-controls">
+            <input id="kbSearch" class="kb-input" placeholder="Поиск: например «клеточные», «эукариоты»…" autocomplete="off" />
+
+            <select id="kbLevel" class="kb-select" title="Уровень">
+              <option value="">Все уровни</option>
+              <option value="Империя">Империя</option>
+              <option value="Надцарство">Надцарство</option>
+              <option value="Царство">Царство</option>
+              <option value="Подцарство">Подцарство</option>
+              <option value="Тип">Тип</option>
+              <option value="Класс">Класс</option>
+              <option value="Отряд">Отряд</option>
+              <option value="Семейство">Семейство</option>
+              <option value="Род">Род</option>
+              <option value="Вид">Вид</option>
+              <option value="Общее">Общее</option>
+            </select>
+
+            <button id="kbClear" class="btn" type="button">Сбросить</button>
+          </div>
+        </section>
+
+        <!-- Основной layout: слева схема, справа панель статей -->
+        <section class="kb-layout" style="margin-top:10px;">
+          <!-- СХЕМА -->
+          <div class="kb-left">
+            <section class="rank-list timeline kb-timeline" aria-label="Схема уровней (кликабельная)">
+              <div class="timeline__line" aria-hidden="true"></div>
+
+              <!-- data-node = id статьи -->
+              <div class="rank-item" data-node="cellular">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Империя: Клеточные</div>
+              </div>
+
+              <div class="rank-item" data-node="noncellular">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Империя: Неклеточные</div>
+              </div>
+
+              <div class="rank-item" data-node="prokaryotes">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Надцарство: Прокариоты</div>
+              </div>
+
+              <div class="rank-item" data-node="eukaryotes">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Надцарство: Эукариоты</div>
+              </div>
+
+              <div class="rank-item" data-node="animals">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Царство: Животные</div>
+              </div>
+
+              <div class="rank-item" data-node="plants">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Царство: Растения</div>
+              </div>
+
+              <div class="rank-item" data-node="fungi">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Царство: Грибы</div>
+              </div>
+
+              <div class="rank-item" data-node="bacteria">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Царство: Бактерии</div>
+              </div>
+
+              <div class="rank-item" data-node="viruses">
+                <span class="node" aria-hidden="true"></span>
+                <div class="rank-pill">Царство: Вирусы</div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ПАНЕЛЬ СТАТЕЙ -->
+          <div class="kb-right">
+            <section class="card kb-panel">
+              <div class="kb-panel-head">
+                <h2 class="kb-h2">Результаты</h2>
+                <div id="kbCount" class="kb-count">0</div>
+              </div>
+
+              <div id="kbSelected" class="kb-selected">
+                <div class="note">Выбери уровень на схеме или воспользуйся поиском.</div>
+              </div>
+
+              <div id="kbList" class="kb-list" aria-label="Список статей"></div>
+            </section>
+          </div>
+        </section>
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div style="opacity:.85">©PodleSSniy08/biology</div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Отзывы — СОПОДЧИНЕНИЕ</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/app.js"></script>
+  <script defer src="js/global-search.js"></script>
+
+  <script defer src="js/parallax.js"></script>
+  <script defer src="js/progress.js"></script>
+  <script defer src="js/highlight.js"></script>
+  <script defer src="js/reveal.js"></script>
+  <script defer src="js/reviews.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><div class="progress__bar"></div></div>
+  <div class="page">
+    <div class="bg" style="background-image:url('assets/bg-earth.jpg')"></div>
+    <img class="hero-earth hero-earth--scheme earth-img" src="assets/earth-circle.png" alt="Земля">
+    <header class="header">
+      <div class="container">
+        <nav class="navbar" aria-label="Навигация">
+          <div class="nav-group nav-left">
+            <a class="pill" data-nav href="index.html">Главная</a>
+            <a class="pill" data-nav href="scheme.html">Схема</a>
+            <a class="pill" data-nav href="articles.html">Статьи</a>
+          </div>
+          <div class="nav-center"></div>
+
+          <div class="nav-group nav-right">
+            <a class="pill" data-nav href="team.html">Команда</a>
+            <a class="pill" data-nav href="reviews.html">Отзыв</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <main class="section">
+      <div class="container">
+        <section class="hero-box" style="margin-top:120px; background: transparent; box-shadow:none; padding:0">
+          <h1 class="hero-title" style="font-size:64px; margin-bottom:8px;">Отзывы</h1>
+          <p class="hero-sub" style="max-width: 980px;">
+            Здесь можно оставить отзыв о справочнике. Важно: отзывы появляются на сайте
+            <span class="kw">только после модерации</span>.
+          </p>
+        </section>
+        <section class="card reviews-card" style="margin-top:18px;" data-reveal>
+          <h2 class="team-h2" style="font-size:40px; margin-bottom:10px;">Оставить отзыв</h2>
+          <p class="note" style="text-align:center; margin-top:0;">
+            Как работает модерация: после отправки отзыв автоматически копируется в буфер обмена.
+            Отправь его модератору/учителю — и после проверки он будет добавлен в список опубликованных.
+          </p>
+          <form id="reviewForm" class="form">
+            <div class="form-row">
+              <input id="name" class="input" placeholder="Имя (можно анонимно)">
+              <input id="grade" class="input" placeholder="Класс (например: 7А)">
+            </div>
+            <textarea id="text" class="input" placeholder="Текст отзыва..." required></textarea>
+            <div class="form-actions">
+              <button class="btn" type="submit">Отправить на модерацию</button>
+              <span id="msg" class="msg"></span>
+            </div>
+            <textarea id="snippet" class="input" style="display:none" readonly></textarea>
+          </form>
+        </section>
+        <section class="card reviews-card" style="margin-top:14px;" data-reveal>
+          <h2 class="team-h2" style="font-size:40px; margin-bottom:10px;">Опубликованные отзывы</h2>
+          <div id="reviewList"></div>
+          <div id="reviewList" class="review-list"></div>
+          <div class="note" style="text-align:center; margin-top:14px;">            
+          </div>
+        </section>
+        <footer class="footer">
+          <div class="container">
+            <div style="opacity:.85">©PodleSSniy08/biology</div>
+          </div>
+        </footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "cellular",
+    "title": "Клеточные организмы",
+    "type": "article",
+    "level": "Империя",
+    "tags": ["клетка", "термины"],
+    "synonyms": ["клеточные", "клеточные формы жизни"],
+    "url": "article.html?id=cellular"
+  },
+  {
+    "id": "prokaryotes",
+    "title": "Прокариоты",
+    "type": "article",
+    "level": "Надцарство",
+    "tags": ["бактерии", "археи"],
+    "synonyms": ["прокариоты", "безъядерные"],
+    "url": "article.html?id=prokaryotes"
+  },
+  {
+    "id": "eukaryotes",
+    "title": "Эукариоты",
+    "type": "article",
+    "level": "Надцарство",
+    "tags": ["ядро", "органоиды"],
+    "synonyms": ["эукариоты", "ядерные"],
+    "url": "article.html?id=eukaryotes"
+  },
+  {
+    "id": "hamster-example",
+    "title": "Пример: хомяк и цепочка таксонов",
+    "type": "page",
+    "level": "Пример",
+    "tags": ["пример", "грызуны"],
+    "synonyms": ["хомяк", "cricetus"],
+    "url": "example.html"
+  }
+]

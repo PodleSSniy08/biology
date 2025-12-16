@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Схема — СОПОДЧИНЕНИЕ</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script defer src="js/app.js"></script>
+  <script defer src="js/global-search.js"></script>
+  <script defer src="js/parallax.js"></script>
+  <script defer src="js/highlight.js"></script>
+  <script defer src="js/progress.js"></script>
+  <script defer src="js/scheme-timeline.js"></script>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><div class="progress__bar"></div></div>
+
+  <div class="page">
+    <div class="bg" style="background-image:url('assets/bg-earth.jpg')"></div>
+    <img class="hero-earth hero-earth--scheme earth-img" src="assets/earth-circle.png" alt="Земля">
+
+    <header class="header">
+      <div class="container">
+        <nav class="navbar" aria-label="Навигация">
+          <div class="nav-group nav-left">
+            <a class="pill" data-nav href="index.html">Главная</a>
+            <a class="pill" data-nav href="scheme.html">Схема</a>
+            <a class="pill" data-nav href="articles.html">Статьи</a>
+          </div>
+
+          <div class="nav-center"></div>
+
+          <div class="nav-group nav-right">
+            <a class="pill" data-nav href="team.html">Команда</a>
+            <a class="pill" data-nav href="reviews.html">Отзыв</a>
+          </div>
+        </nav>
+      </div>
+    </header>
+
+    <main class="scheme-wrap">
+      <div class="container">
+        <div class="scheme-grid">
+
+          <div class="earth-ring" aria-label="Земля">
+            <img class="earth-img" src="assets/earth-circle.png" alt="Земля">
+          </div>
+
+          <section class="rank-list timeline" aria-label="Уровни систематики">
+            <div class="timeline__line" aria-hidden="true"></div>
+
+            <!-- Империя -->
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+
+              <div class="rank-pill rank-label">Империя:</div>
+
+              <div class="rank-values">
+                <a class="rank-pill rank-link" href="article.html?id=cellular">Клеточные</a>
+                <a class="rank-pill rank-link" href="article.html?id=noncellular">Неклеточные</a>
+              </div>
+            </div>
+
+            <!-- Надцарство -->
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+
+              <div class="rank-pill rank-label">Надцарство:</div>
+
+              <div class="rank-values">
+                <a class="rank-pill rank-link" href="article.html?id=prokaryotes">Прокариоты</a>
+                <a class="rank-pill rank-link" href="article.html?id=eukaryotes">Эукариоты</a>
+              </div>
+            </div>
+
+            <!-- Царство -->
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+
+              <div class="rank-pill rank-label">Царство:</div>
+
+              <div class="rank-values">
+                <a class="rank-pill rank-link" href="article.html?id=bacterium">Бактерии</a>
+                <a class="rank-pill rank-link" href="article.html?id=archaea">Археи</a>
+                <a class="rank-pill rank-link" href="article.html?id=plants">Растения</a>
+                <a class="rank-pill rank-link" href="article.html?id=animals">Животные</a>
+                <a class="rank-pill rank-link" href="article.html?id=fungus">Грибы</a>
+                <a class="rank-pill rank-link" href="article.html?id=chromists">Хромисты</a>
+                <a class="rank-pill rank-link" href="article.html?id=protozoa">Простейшие</a>
+              </div>
+            </div>
+
+            <!-- Подцарство -->
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+
+              <div class="rank-pill rank-label">Подцарство:</div>
+
+              <div class="rank-values">
+                <a class="rank-pill rank-link" href="article.html?id=unicellular">Одноклеточные</a>
+                <a class="rank-pill rank-link" href="article.html?id=multicellular">Многоклеточные</a>
+              </div>
+            </div>
+
+            <!-- Длинные уровни -->
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+              <div class="rank-pill rank-pill--wide">Тип/отдел (например, членистоногие или хордовые)</div>
+            </div>
+
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+              <div class="rank-pill rank-pill--wide">Класс (например, птицы, рыбы, млекопитающие и тд)</div>
+            </div>
+
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+              <div class="rank-pill rank-pill--wide">Отряд (например, приматы, бабочки, грызуны и тд)</div>
+            </div>
+
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+              <div class="rank-pill rank-pill--wide">Семейство (например, гоминиды, белянки, хомяковые и тд)</div>
+            </div>
+
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+              <div class="rank-pill rank-pill--wide">Род (например, человек, белянка, хомяк и тд)</div>
+            </div>
+
+            <div class="rank-item">
+              <span class="node" aria-hidden="true"></span>
+              <div class="rank-pill rank-pill--wide">Вид (например, человек разумный, капустная белянка, джунгарский и тд)</div>
+            </div>
+
+          </section>
+
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div style="opacity:.85">©PodleSSniy08/biology</div>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>
