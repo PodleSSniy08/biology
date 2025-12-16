@@ -1,4 +1,4 @@
-(() => {(() => {
+(() => {
   const INDEX_URL = "data/search-index.json";
   const MAX_RESULTS = 12;
   let index = [];
@@ -29,37 +29,38 @@
   async function loadIndex() {
     if (index.length) return;
     const r = await fetch(INDEX_URL, { cache: "no-store" });
+    if (!r.ok) throw new Error(`Index fetch failed: ${r.status}`);
     index = await r.json();
   }
   function ensureUI() {
     if (document.getElementById("gsModal")) return;
-    const center = document.querySelector(".navbar .nav-center");
-    if (center && !document.getElementById("gsOpenBtn")) {
+    const slot =
+      document.querySelector(".navbar .nav-center") ||
+      document.querySelector(".navbar");
+    if (slot && !document.getElementById("gsOpenBtn")) {
       const btn = document.createElement("button");
       btn.id = "gsOpenBtn";
       btn.type = "button";
-      btn.className = "nav-search";
-      btn.setAttribute("aria-label", "Поиск по сайту");
+      btn.className = "pill pill--icon pill--search";
+      btn.setAttribute("aria-label", "Поиск");
       btn.innerHTML = `
-        <span class="nav-search__text">Найти вид / род / семейство…</span>
-        <span style="display:flex; align-items:center; gap:10px;">
-          <span class="nav-search__key">Ctrl K</span>
-          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M10.5 18a7.5 7.5 0 1 1 5.3-12.8A7.5 7.5 0 0 1 10.5 18Zm0-2a5.5 5.5 0 1 0-3.9-9.4A5.5 5.5 0 0 0 10.5 16Zm7.9 5.1-4.2-4.2 1.4-1.4 4.2 4.2-1.4 1.4Z"></path>
-          </svg>
-        </span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M10.5 18a7.5 7.5 0 1 1 5.3-12.8A7.5 7.5 0 0 1 10.5 18Zm0-2a5.5 5.5 0 1 0-3.9-9.4A5.5 5.5 0 0 0 10.5 16Zm7.9 5.1-4.2-4.2 1.4-1.4 4.2 4.2-1.4 1.4Z"/>
+        </svg>
       `;
       btn.addEventListener("click", () => open(""));
-      center.appendChild(btn);
+      slot.appendChild(btn);
     }
     const modal = document.createElement("div");
     modal.id = "gsModal";
     modal.className = "gs-modal";
     modal.innerHTML = `
       <div class="gs-backdrop" data-gs-close></div>
-      <div class="gs-box" role="dialog" aria-modal="true" aria-label="Поиск по статьям">
+      <div class="gs-box" role="dialog" aria-modal="true" aria-label="Поиск по сайту">
         <div class="gs-top">
-          <input id="gsInput" class="gs-input" placeholder="Найти вид / род / царство… (например: эукариоты, Cricetus)" autocomplete="off" />
+          <input id="gsInput" class="gs-input"
+            placeholder="Найти вид / род / царство… (например: эукариоты, Cricetus)"
+            autocomplete="off" />
           <button class="gs-x" type="button" data-gs-close aria-label="Закрыть">✕</button>
         </div>
         <div class="gs-hint">Enter — открыть • ↑↓ — выбрать • Esc — закрыть • Ctrl+K — поиск</div>
@@ -67,9 +68,9 @@
       </div>
     `;
     document.body.appendChild(modal);
-    modal
-      .querySelectorAll("[data-gs-close]")
-      .forEach((el) => el.addEventListener("click", close));
+    modal.querySelectorAll("[data-gs-close]").forEach((el) =>
+      el.addEventListener("click", close)
+    );
     const input = document.getElementById("gsInput");
     input.addEventListener("input", () => render(input.value));
     input.addEventListener("keydown", onKeyDown);
@@ -83,7 +84,7 @@
     const input = document.getElementById("gsInput");
     input.value = prefill;
     render(prefill);
-    setTimeout(() => input.focus(), 0);
+    requestAnimationFrame(() => input.focus());
   }
   function close() {
     isOpen = false;
@@ -95,7 +96,8 @@
     const t = escapeHtml(text);
     const qq = norm(q);
     if (!qq) return t;
-    const i = norm(text).indexOf(qq);
+    const low = norm(text);
+    const i = low.indexOf(qq);
     if (i < 0) return t;
     const a = escapeHtml(text.slice(0, i));
     const b = escapeHtml(text.slice(i, i + qq.length));
@@ -120,15 +122,14 @@
       return;
     }
     box.innerHTML = scored
-      .map((x, idx) => {
-        const it = x.it;
+      .map(({ it }, idx) => {
         return `
           <a class="gs-item ${idx === active ? "is-active" : ""}"
              role="option"
              data-idx="${idx}"
              href="${escapeHtml(it.url)}">
             <div class="gs-title">${highlight(it.title, q)}</div>
-            <div class="gs-meta">${escapeHtml(it.type)} · ${escapeHtml(it.level || "—")}</div>
+            <div class="gs-meta">${escapeHtml(it.type || "Статья")} · ${escapeHtml(it.level || "—")}</div>
           </a>
         `;
       })
@@ -176,12 +177,14 @@
     }
   }
   async function onGlobalKey(e) {
-    const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k";
+    const key = (e.key || "").toLowerCase();
+    const isCmdK = (e.ctrlKey || e.metaKey) && key === "k";
     const isSlash = !e.ctrlKey && !e.metaKey && e.key === "/";
     if (isCmdK || isSlash) {
       e.preventDefault();
       await loadIndex();
       open("");
+      return;
     }
     if (isOpen && e.key === "Escape") close();
   }
@@ -190,5 +193,6 @@
     await loadIndex();
     document.addEventListener("keydown", onGlobalKey);
   }
-  init().catch(() => {});
+  init().catch(() => {
+  });
 })();
