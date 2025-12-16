@@ -7,10 +7,9 @@
   const selectedEl = $("kbSelected");
   const clearBtn = $("kbClear");
   let ARTICLES = [];
-  let selectedNodeId = "";
-  const norm = (s) => (s || "").toString().toLowerCase().trim();
+  const norm = (s) => String(s ?? "").toLowerCase().trim();
   function escapeHtml(s) {
-    return String(s || "")
+    return String(s ?? "")
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
@@ -29,7 +28,9 @@
       article.category,
       (article.tags || []).join(" "),
       (article.synonyms || []).join(" ")
-    ].map(norm).join(" ");
+    ]
+      .map(norm)
+      .join(" ");
     return hay.includes(q);
   }
   function renderSelectedPreview(article) {
@@ -38,67 +39,71 @@
       selectedEl.innerHTML = `<div class="note">Выбери уровень на схеме или воспользуйся поиском.</div>`;
       return;
     }
-    const children = ARTICLES.filter(x => (x.parentId || "") === article.id);
+    const children = ARTICLES.filter((x) => (x.parentId || "") === article.id);
     selectedEl.innerHTML = `
       <div class="kb-preview">
         <div class="kb-preview-top">
           <div class="kb-badges">
             ${article.level ? `<span class="kb-badge">${escapeHtml(article.level)}</span>` : ""}
-            ${article.category ? `<span class="kb-badge">${escapeHtml(article.category)}</span>` : ""}
             ${article.readTime ? `<span class="kb-badge">⏱ ${escapeHtml(article.readTime)} мин</span>` : ""}
           </div>
           <a class="btn" href="article.html?id=${encodeURIComponent(article.id)}">Открыть статью</a>
         </div>
-        <h3 class="kb-preview-title">${escapeHtml(article.title)}</h3>
+        <h3 class="kb-preview-title">${escapeHtml(article.title || "Статья")}</h3>
         <p class="kb-preview-text">${escapeHtml(article.excerpt || "")}</p>
         ${
           children.length
             ? `
           <div class="kb-next">
-            <div class="kb-next-title">Дальше по дереву:</div>
+            <div class="kb-next-title">Дальше по цепочке:</div>
             <div class="kb-next-grid">
-              ${children.map(ch => `
+              ${children
+                .map(
+                  (ch) => `
                 <a class="kb-next-card" href="article.html?id=${encodeURIComponent(ch.id)}">
                   <div class="kb-next-name">${escapeHtml(ch.title)}</div>
-                  <div class="kb-next-meta">${escapeHtml(ch.level || "—")} · ⏱ ${escapeHtml(ch.readTime || 0)} мин</div>
+                  <div class="kb-next-meta">${escapeHtml(ch.level || "—")} · ⏱ ${escapeHtml(
+                    ch.readTime || 1
+                  )} мин</div>
                 </a>
-              `).join("")}
+              `
+                )
+                .join("")}
             </div>
           </div>
         `
-            : `<div class="note" style="text-align:left">Для этого уровня пока нет “следующих шагов”.</div>`
+            : ""
         }
       </div>
     `;
   }
-  function render() {
+  function renderList() {
     if (!listEl || !countEl) return;
     const items = ARTICLES.filter(matches);
     countEl.textContent = String(items.length);
-    if (selectedNodeId) {
-      const selected = ARTICLES.find(a => a.id === selectedNodeId);
-      renderSelectedPreview(selected || null);
-    }
     if (!items.length) {
-      listEl.innerHTML = `<div class="note" style="text-align:center;">Ничего не найдено. Попробуй другой запрос или сбрось фильтры.</div>`;
+      listEl.innerHTML = `<div class="note" style="text-align:center;">Ничего не найдено. Попробуй другой запрос или сбрось фильтр.</div>`;
       return;
     }
-    listEl.innerHTML = items.map(a => `
+    listEl.innerHTML = items
+      .map(
+        (a) => `
       <a class="kb-item" href="article.html?id=${encodeURIComponent(a.id)}">
         <div class="kb-item-title">${escapeHtml(a.title)}</div>
-        ${a.excerpt ? `<div class="kb-item-excerpt">${escapeHtml(a.excerpt)}</div>` : ""}
+        <div class="kb-item-excerpt">${escapeHtml(a.excerpt || "")}</div>
         <div class="kb-item-meta">
           <span class="kb-dot"></span>
           <span>${escapeHtml(a.level || "—")}</span>
-          ${a.category ? `<span>·</span><span>${escapeHtml(a.category)}</span>` : ""}
           <span>·</span>
-          <span>⏱ ${escapeHtml(a.readTime || 0)} мин</span>
+          <span>⏱ ${escapeHtml(a.readTime || 1)} мин</span>
         </div>
       </a>
-    `).join("");
+    `
+      )
+      .join("");
   }
   function hookTimelineClicks() {
-    document.querySelectorAll(".rank-item[data-node]").forEach(item => {
+    document.querySelectorAll(".rank-item[data-node]").forEach((item) => {
       item.style.cursor = "pointer";
       item.addEventListener("click", () => {
         const id = item.getAttribute("data-node");
@@ -107,27 +112,35 @@
       });
     });
   }
+  function hookInitialFromHashOrQuery() {
+    const params = new URLSearchParams(location.search);
+    const focus = params.get("focus");
+    if (!focus) return;
+    const a = ARTICLES.find((x) => x.id === focus);
+    if (a) renderSelectedPreview(a);
+  }
   function clearAll() {
     if (searchEl) searchEl.value = "";
     if (levelEl) levelEl.value = "";
-    selectedNodeId = "";
-    document.querySelectorAll(".rank-item").forEach(x => x.classList.remove("is-active"));
     renderSelectedPreview(null);
-    render();
+    renderList();
   }
   async function init() {
+    if (!searchEl || !levelEl || !listEl || !countEl || !clearBtn) return;
     const r = await fetch("data/articles.json", { cache: "no-store" });
+    if (!r.ok) throw new Error(`articles.json: ${r.status}`);
     ARTICLES = await r.json();
     hookTimelineClicks();
-    if (searchEl) searchEl.addEventListener("input", render);
-    if (levelEl) levelEl.addEventListener("change", render);
-    if (clearBtn) clearBtn.addEventListener("click", clearAll);
+    searchEl.addEventListener("input", renderList);
+    levelEl.addEventListener("change", renderList);
+    clearBtn.addEventListener("click", clearAll);
     renderSelectedPreview(null);
-    render();
+    renderList();
+    hookInitialFromHashOrQuery();
   }
   init().catch(() => {
     if (listEl) {
-      listEl.innerHTML = `<div class="note" style="text-align:center;">Не найден файл data/articles.json или ошибка загрузки</div>`;
+      listEl.innerHTML = `<div class="note" style="text-align:center;">Не найден файл <b>data/articles.json</b> или он повреждён.</div>`;
     }
   });
 })();
