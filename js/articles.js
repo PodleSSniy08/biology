@@ -137,8 +137,7 @@
     renderSelectedPreview(null);
     renderList();
     hookInitialFromHashOrQuery();
-  }
-  
+  }  
   init().catch(() => {
     if (listEl) {
       listEl.innerHTML = `<div class="note" style="text-align:center;">Не найден файл <b>data/articles.json</b> или он повреждён.</div>`;
