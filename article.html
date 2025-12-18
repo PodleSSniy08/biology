@@ -38,9 +38,7 @@
           <h1 id="aTitle" class="hero-title" style="font-size:64px; margin-bottom:12px;">Загрузка…</h1>
           <p id="aDesc" class="hero-sub" style="max-width:980px; margin-bottom:12px;"></p>
           <div id="aAuthor" class="note" style="margin-top:16px; display:none;"></div>
-
           <div id="aMeta" class="note" style="margin-top:6px; display:none;"></div>
-
           <div class="kb-controls" style="gap:12px; margin-top:10px; flex-wrap:wrap;">
             <a class="btn" href="articles.html">← Ко всем статьям</a>
             <a id="parentBtn" class="btn" href="#" style="display:none;">← К родительскому уровню</a>
@@ -68,12 +66,10 @@
         const el = document.getElementById(id);
         if (el) el.textContent = text || '';
       };
-
       const setHtml = (id, html) => {
         const el = document.getElementById(id);
         if (el) el.innerHTML = html || '';
       };
-
       const showError = (message) => {
         setText('aTitle', 'Статья недоступна');
         setText('aDesc', '');
@@ -84,41 +80,35 @@
           err.textContent = message;
         }
       };
-
       const escapeHtml = (str) => str
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
-
       const renderLegacyBody = (body) => {
         const lines = (body || '').replace(/\r\n?/g, '\n').split('\n');
         const htmlParts = [];
         let listOpen = false;
         let paragraph = [];
-
         const closeParagraph = () => {
           if (paragraph.length) {
             htmlParts.push(`<p>${paragraph.join(' ')}</p>`);
             paragraph = [];
           }
         };
-
         const closeList = () => {
           if (listOpen) {
             htmlParts.push('</ul>');
             listOpen = false;
           }
         };
-
         lines.forEach((line) => {
           if (!line.trim()) {
             closeParagraph();
             closeList();
             return;
           }
-
           if (line.startsWith('- ')) {
             closeParagraph();
             if (!listOpen) {
@@ -128,16 +118,13 @@
             htmlParts.push(`<li>${escapeHtml(line.slice(2).trim())}</li>`);
             return;
           }
-
           closeList();
           paragraph.push(escapeHtml(line.trim()));
         });
-
         closeParagraph();
         closeList();
         return htmlParts.join('\n');
       };
-
       const renderStructuredContent = (content) => {
         if (!content) return '';
         const parts = [];
@@ -156,12 +143,10 @@
         });
         return parts.join('\n');
       };
-
       const applyNavigation = (articles, current) => {
         const parentButton = document.getElementById('parentBtn');
         const nextButton = document.getElementById('nextBtn');
         if (!parentButton || !nextButton) return;
-
         const parent = current.parentId ? articles.find((a) => a.id === current.parentId) : null;
         if (parent) {
           parentButton.href = `article.html?id=${encodeURIComponent(parent.id)}`;
@@ -169,7 +154,6 @@
         } else {
           parentButton.style.display = 'none';
         }
-
         const child = articles.find((a) => a.parentId === current.id);
         if (child) {
           nextButton.href = `article.html?id=${encodeURIComponent(child.id)}`;
@@ -178,12 +162,10 @@
           nextButton.style.display = 'none';
         }
       };
-
       const applyImage = (article) => {
         const wrap = document.getElementById('imgWrap');
         const img = document.getElementById('aImg');
         if (!wrap || !img) return;
-
         if (article.image) {
           img.src = article.image;
           img.alt = article.imageAlt || article.title || 'Изображение статьи';
@@ -194,38 +176,31 @@
           img.removeAttribute('alt');
         }
       };
-
       const params = new URLSearchParams(window.location.search);
       const articleId = params.get('id');
       if (!articleId) {
         showError('Не указан идентификатор статьи. Используйте параметр id в адресе.');
         return;
       }
-
       fetch('data/articles.json', { cache: 'no-store' })
         .then((res) => res.json())
         .then((articles) => {
           if (!Array.isArray(articles)) {
             throw new Error('Некорректный формат данных.');
           }
-
           const article = articles.find((item) => item.id === articleId);
           if (!article) {
             showError('Статья не найдена. Проверьте корректность ссылки.');
             return;
           }
-
           document.title = `${article.title} — СОПОДЧИНЕНИЕ`;
           setText('aTitle', article.title || 'Без названия');
           setText('aDesc', article.excerpt || '');
-
           applyNavigation(articles, article);
           applyImage(article);
-
           const content = article.content
             ? renderStructuredContent(article.content)
             : renderLegacyBody(article.body || '');
-
           if (content) {
             setHtml('aContent', content);
           } else {
