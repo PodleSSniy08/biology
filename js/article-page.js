@@ -6,7 +6,6 @@
   const updatedEl = $("articleUpdated");
   const linksEl = $("articleLinks");
   const sourcesEl = $("articleSources");
-
   const norm = (s) => String(s ?? "").trim();
   const escapeHtml = (s) =>
     String(s ?? "")
@@ -15,7 +14,6 @@
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;")
       .replaceAll("'", "&#039;");
-
   function formatBody(body) {
     const parts = norm(body).split(/\n\s*\n/).filter(Boolean);
     if (!parts.length) return `<div class="note">Нет содержимого статьи.</div>`;
@@ -23,7 +21,6 @@
       .map((block) => `<p>${escapeHtml(block).replaceAll("\n", "<br>")}</p>`)
       .join("");
   }
-
   function renderMeta(article) {
     if (!metaEl) return;
     const tags = (article.tags || []).map((t) => `<span class="kb-badge">${escapeHtml(t)}</span>`).join("");
@@ -32,7 +29,6 @@
     const read = article.readTime ? `<span class="kb-badge">⏱ ${escapeHtml(article.readTime)} мин</span>` : "";
     metaEl.innerHTML = [level, category, read, tags].filter(Boolean).join("");
   }
-
   function renderUpdated(article) {
     if (!updatedEl) return;
     if (!article.updated) {
@@ -42,7 +38,6 @@
     const date = new Date(article.updated);
     updatedEl.textContent = `Обновлено: ${date.toLocaleDateString("ru-RU")}`;
   }
-
   function renderLinks(article, articles) {
     if (!linksEl) return;
     const children = articles.filter((x) => (x.parentId || "") === article.id);
@@ -87,7 +82,6 @@
     linksEl.innerHTML = parts.join("");
     linksEl.style.display = "block";
   }
-
   function renderSources(article) {
     if (!sourcesEl) return;
     const list = article.sources || [];
@@ -114,7 +108,6 @@
     `;
     sourcesEl.style.display = "block";
   }
-
   function showError(message) {
     if (titleEl) titleEl.textContent = "Статья не найдена";
     if (metaEl) metaEl.innerHTML = "";
@@ -122,7 +115,6 @@
     if (linksEl) linksEl.style.display = "none";
     if (sourcesEl) sourcesEl.style.display = "none";
   }
-
   async function init() {
     if (!contentEl || !titleEl || !metaEl) return;
     const params = new URLSearchParams(location.search);
@@ -131,23 +123,18 @@
       showError("Не указан идентификатор статьи. Вернись к списку и выбери нужную.");
       return;
     }
-
     const r = await fetch("data/articles.json", { cache: "no-store" });
     if (!r.ok) throw new Error(`articles.json: ${r.status}`);
     const articles = await r.json();
-
     const article = articles.find((x) => x.id === id);
     if (article.author) {
   const meta = document.getElementById("aMeta");
-
   let authorText = "";
-
   if (typeof article.author === "string") {
     authorText = `Автор: ${article.author}`;
   } else if (article.author.name) {
     authorText = `Автор: ${article.author.name}`;
   }
-
   if (authorText) {
     meta.textContent = authorText;
     meta.style.display = "";
@@ -157,18 +144,14 @@
       showError("Такой статьи нет в базе. Возможно, она была удалена или переименована.");
       return;
     }
-// автор статьи
 if (article.author) {
   const meta = document.getElementById("aMeta");
-
   let authorText = "";
-
   if (typeof article.author === "string") {
     authorText = `Автор: ${article.author}`;
   } else if (article.author.name) {
     authorText = `Автор: ${article.author.name}`;
   }
-
   if (authorText) {
     meta.textContent = authorText;
     meta.style.display = "";
@@ -181,8 +164,6 @@ if (article.author) {
     : `Автор: ${article.author.name}`;
   el.style.display = "";
 }
-
-
     document.title = `${article.title} — Статья`;
     titleEl.textContent = article.title;
     renderMeta(article);
@@ -190,12 +171,10 @@ if (article.author) {
     contentEl.innerHTML = formatBody(article.body);
     renderLinks(article, articles);
     renderSources(article);
-
     if (typeof window.applyHighlight === "function") {
       window.applyHighlight();
     }
   }
-
   init().catch(() => {
     showError("Не удалось загрузить файл data/articles.json.");
   });
